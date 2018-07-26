@@ -1,0 +1,17 @@
+node {
+    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+        
+        def conf_repo = "https://bitbucket.org/azurevdi/core-imagebakeryscan-win-conf.git"
+        //set as an env variable
+        env.conf_repo=conf_repo
+        env.conf_repo_branch='master'
+              
+        stage 'checkout' 
+           checkout scm
+        
+        //load jenkins file
+        load ".\\jenkins\\scan.jenkinsfile"
+    }  
+}      
+
+

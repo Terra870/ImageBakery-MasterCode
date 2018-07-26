@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config>
+    <general>
+        <subscriptionid name="adc198ea-2988-47ac-9b0e-bfb3b72ffd74" />
+        <subscriptionname name="tadpoleprod"/>
+        <tenantid name="10b7e21d-a6b9-44f7-9a1e-984d61e05294"/>
+        <resourcegroup name="coreimagebakery-1-prod-europe-rg" location="North Europe"/>
+        <deployment name="Image Creation"/>
+        <VM name="az2k16temp"/>
+        <Image name="azimg-2k16-datacenter-prod-europe"/>
+        <Storage_Account name="coreimagebakerytmpprodeu"/>
+        <Storage_Account_Tier name="Standard"/>
+        <Storage_Account_Replication_Type name="LRS"/>
+        <deployment name="AZ Image Deploy"/>
+        <automationaccount name="VDI-WS-azengg-auto"/>
+        <spname name="sp-core-imagebakery"/>
+        <spid name="b1221874-fe0e-4242-a299-ac17f2b49753"/>
+        <networkrg name="network-core1-prod-europe-rg"/>
+    </general>
+    <StorageAccounts>
+        <srcStorageAccount_RG_Name>coreimagebakery-1-prod-europe-rg</srcStorageAccount_RG_Name>
+        <srcStorageAccountName>coreimagebakery1prodeu</srcStorageAccountName>
+        <srcFileShare>ref-build</srcFileShare>
+    </StorageAccounts>
+    
+    <terraform>
+        <var name="az_engg_rg" value="coreimagebakery-1-prod-europe-rg"/>
+        <var name="az_engg_loc" value="NorthEurope"/>
+
+        <var name="AZ_engg_VM1_Name" value="az2k16temp"/>
+        <var name="AZ_engg_VM1_UserName" value="Harlequin"/>
+        <var name="AZ_engg_VM1_Pass" value="Password123789456"/>
+
+        <var name="AZ_engg_Billing_Tag" value="VDI Windows Server Image engg Environment"/>
+        <var name="AZ_engg_CreatedBy_Tag" value="Cloud Team - Jenkins Workflow"/>
+
+        <var name="image_publisher" value="MicrosoftWindowsServer"/>
+        <var name="image_offer" value="WindowsServer"/>
+        <var name="image_sku" value="2016-Datacenter"/>
+        <var name="image_version" value="latest"/>
+
+        <var name="az_engg_sa" value="coreimagebakery1prodeu"/>
+        <var name="az_engg_sa_account_tier" value="Standard"/>
+        <var name="az_engg_sa_account_replication_type" value="LRS"/>
+
+        <var name="remote_resource_group_name" value="coretfstate-1-prod-northeurope-rg"/>
+        <var name="remote_storage_account_name" value="corenetworkbfb3b72ffd74"/>
+        <var name="remote_container_name" value="tfstate"/>
+        <var name="remote_key_network" value="core-networking-conf-demo"/>
+
+        <var name="imagetype" value="win2k16"/>
+    </terraform>
+    <dsc>
+        <module name="xNetworking" version="5.3.0.0"/>
+        <module name="xSQLServer" version="8.2.0.0"/>
+    </dsc>
+</config>

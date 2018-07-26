@@ -1,0 +1,30 @@
+stage('SetEnvVariable') {
+    dir('conf') {
+        checkout([$class: 'GitSCM', branches: [[name: conf_repo_branch]], userRemoteConfigs: [[credentialsId: 'GITCRED', url: conf_repo]]
+        ])
+        //load env_dir + "\\default.conf"
+        env.VARDIR=pwd() + "\\" + env_dir
+    }
+}
+
+print VARDIR
+
+withCredentials([
+  azureServicePrincipal('az_imagebakery')
+]) {
+    stage('Core VM Setup') {
+      bat "powershell .\\build.ps1 -CONFPATH '${VARDIR}' -MODE 'apply' -AZURE_SUBSCRIPTION_ID ${AZURE_SUBSCRIPTION_ID} -AZURE_CLIENT_ID ${AZURE_CLIENT_ID} -AZURE_CLIENT_SECRET ${AZURE_CLIENT_SECRET} -AZURE_TENANT_ID ${AZURE_TENANT_ID}"
+    }
+
+    stage('Temp VM config') {
+      bat "powershell .\\config.ps1 -CONFPATH '${VARDIR}' -MODE 'config' -AZURE_SUBSCRIPTION_ID ${AZURE_SUBSCRIPTION_ID} -AZURE_CLIENT_ID ${AZURE_CLIENT_ID} -AZURE_CLIENT_SECRET ${AZURE_CLIENT_SECRET} -AZURE_TENANT_ID ${AZURE_TENANT_ID}"
+    }
+
+    stage('SysPrep process') {
+      bat "powershell .\\config.ps1 -CONFPATH '${VARDIR}' -MODE 'sysprep' -AZURE_SUBSCRIPTION_ID ${AZURE_SUBSCRIPTION_ID} -AZURE_CLIENT_ID ${AZURE_CLIENT_ID} -AZURE_CLIENT_SECRET ${AZURE_CLIENT_SECRET} -AZURE_TENANT_ID ${AZURE_TENANT_ID}"
+    }
+
+    stage('Destroy VM Setup') {
+      bat "powershell .\\build.ps1 -CONFPATH '${VARDIR}'-MODE 'destroy' -AZURE_SUBSCRIPTION_ID ${AZURE_SUBSCRIPTION_ID} -AZURE_CLIENT_ID ${AZURE_CLIENT_ID} -AZURE_CLIENT_SECRET ${AZURE_CLIENT_SECRET} -AZURE_TENANT_ID ${AZURE_TENANT_ID}"
+    }
+}    

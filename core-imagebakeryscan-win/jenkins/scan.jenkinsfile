@@ -1,0 +1,21 @@
+stage('SetEnvVariable') {
+    dir('conf') {
+        checkout([$class: 'GitSCM', branches: [[name: conf_repo_branch]], userRemoteConfigs: [[credentialsId: 'GITCRED', url: conf_repo]]
+        ])
+        //load env_dir + "\\default.conf"
+        env.VARDIR=pwd()
+    }
+}
+
+
+stage('Core VM Setup') {
+  powershell ".\\build.ps1 -CONFPATH '${VARDIR}' -MODE 'apply'"
+}
+
+stage('scan Temp VM') {
+  powershell ".\\config.ps1 -CONFPATH '${VARDIR}'"
+}
+
+stage('Destroy VM Setup') {
+  powershell ".\\build.ps1 -CONFPATH '${VARDIR}' -MODE 'destroy'"
+}

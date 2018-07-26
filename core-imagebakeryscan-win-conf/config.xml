@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config>
+    <general>
+        <subscriptionid name="adc198ea-2988-47ac-9b0e-bfb3b72ffd74" />
+        <tenantid name="10b7e21d-a6b9-44f7-9a1e-984d61e05294"/>
+        <resourcegroup name="coreimagebakery-1-prod-europe-rg" location="North Europe"/>
+        <Storage_Account name="coreimagebakerytmpprodeu"/>
+        <Storage_Account_Tier name="Standard"/>
+        <Storage_Account_Replication_Type name="LRS"/>
+        <deployment name="AZ Image Deploy"/>
+        <automationaccount name="VDI-WS-azengg-auto"/>
+        <spname name="sp-imagebakery"/>
+        <spid name="244f9ff7-3eec-42c6-b79a-5a4f732c08ca"/>
+    </general>
+    <StorageAccounts>
+        <srcStorageAccount_RG_Name>coreimagebakery-1-prod-europe-rg</srcStorageAccount_RG_Name>
+        <srcStorageAccountName>coreimagebakery1prodeu</srcStorageAccountName>
+        <srcFileShare>ref-build</srcFileShare>
+    </StorageAccounts>
+    
+    <terraform>
+        <var name="az_engg_rg" value="coreimagebakery-1-prod-europe-rg"/>
+        <var name="az_engg_loc" value="NorthEurope"/>
+        <var name="AZ_engg_VM1_Name" value="%AZ_engg_VM1_Name%"/>
+        <var name="AZ_engg_VM1_UserName" value="Harlequin"/>
+        <var name="AZ_engg_VM1_Pass" value="Password123789456"/>
+
+        <var name="AZ_engg_Billing_Tag" value="VDI Windows Temp Image"/>
+        <var name="AZ_engg_CreatedBy_Tag" value="Cloud team using Jenkins Workflow"/>
+
+        <var name="image_id" value="%image_id%"/>
+        <var name="az_engg_sa" value="coreimagebakery1prodeu"/>
+        <var name="az_engg_sa_account_tier" value="Standard"/>
+        <var name="az_engg_sa_account_replication_type" value="LRS"/>
+
+        <var name="remote_resource_group_name" value="terraformstate-core-prod-europe-rg"/>
+        <var name="remote_storage_account_name" value="tfstate1234core1"/>
+        <var name="remote_container_name" value="terraform-states"/>
+        <var name="remote_key_network" value="network"/>
+
+        <var name="image_type" value="%image_type%"/>
+    </terraform>
+    <dsc>
+        <module name="xSQLServer" version="8.2.0.0"/>
+    </dsc>
+    <sqlsettings>
+        <collation name='SQL_Latin1_General_CP1_CI_AS'/>
+    </sqlsettings>
+</config>

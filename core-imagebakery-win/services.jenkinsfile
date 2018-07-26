@@ -1,0 +1,30 @@
+node {
+    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+        
+        def conf_repo = "https://bitbucket.org/azurevdi/core-imagebakery-win-conf.git"
+        //set as an env variable
+        env.conf_repo=conf_repo
+        
+        properties([
+             parameters(
+                 [
+                    choice(choices: "win2k16\nwin2k12", description: 'select image to create e.g. win2k16, windo2k12r2', name: 'mode'),
+                    string(name: 'env_dir' , defaultValue: 'ci', description: 'env value'),
+                    string(name: 'conf_repo_branch', defaultValue: 'master', description: 'conf repo branch or tag'),
+                 ]
+            ),
+            pipelineTriggers([])    
+        ])
+        
+        stage 'checkout' 
+           checkout scm
+        
+        
+        //print test
+        env.mode=mode
+        //load jenkins file
+        load ".\\jenkins\\${mode}.jenkinsfile"
+    }  
+}      
+
+

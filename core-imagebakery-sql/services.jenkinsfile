@@ -1,0 +1,27 @@
+node {
+    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+        
+        def conf_repo = "https://bitbucket.org/azurevdi/core-imagebakery-sql-conf.git"
+        //set as an env variable
+        env.conf_repo=conf_repo
+        
+        properties([
+             parameters(
+                 [
+                    choice(choices: "sql2k14\nsql2k12\nsql2k16\nsql2k17" , defaultValue: 'sql2k14',  description: 'select operation e.g. SQL2K14 SQL2K16', name: 'mode'),
+                    string(name: 'env_dir' , defaultValue: 'tadpoleprod\\2k14', description: 'env value e.g. tadpoleprod\\2k14, tadpoledev\\2k16'),
+                    string(name: 'conf_repo_branch', defaultValue: 'master', description: 'conf repo branch or tag'),
+                 ]
+            ),
+            pipelineTriggers([])    
+        ])
+              
+        stage 'checkout' 
+           checkout scm
+        
+        //load jenkins file
+        load ".\\jenkins\\${mode}.jenkinsfile"
+    }  
+}      
+
+
